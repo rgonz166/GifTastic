@@ -12,7 +12,9 @@ add a event.preventDefault() because using submit button
 
 */
 //Initialize variables
-var gifs = ["cat","dog"];
+var gifs = [];
+var buttonColors = ['primary','secondary','success','danger','warning','info','dark'];
+var favoriteGifs = [];
 
 // Get DOM elements
 var gifButtons = $('.gif-buttons');
@@ -20,6 +22,9 @@ var gifContainer = $('.gif-container');
 var gifInput = $('#gif-input');
 
 $(window).on('load',function(){
+    if(favoriteGifs.length > 0){
+        loadFav();
+    }
     loadButtons();
 });
 
@@ -38,8 +43,9 @@ function loadButtons(){
     for(var i=0;i<gifs.length;i++){
         // creates button
         var button = $('<button>');
+        button.attr('type','button');
         // adds class called gif
-        button.addClass('gif');
+        button.addClass('gif').addClass('btn').addClass('btn-'+buttonColors[i%buttonColors.length]);
         // adds attribute of data-name with the name at that index
         button.attr('data-name', gifs[i]);
         // adds the name as the text of the button
@@ -58,7 +64,31 @@ $(document).on('click','.gif',function(){
         method: "GET"
     }).then(function(res){
         console.log(res);
-    })
+        var results = res.data;
+        // Looping through each result item
+        for (var i = 0; i < results.length; i++) {
+
+            // Creating and storing a div tag
+            var gifDiv = $("<div>");
+            gifDiv.addClass('single-gif');
+
+            // Creating a paragraph tag with the result item's rating
+            var p = $("<p>").text("Rating: [" + results[i].rating +"]");
+            p.addClass('rating');
+
+            // Creating and storing an image tag
+            var gifImage = $("<img>");
+            // Setting the src attribute of the image to a property pulled off the result item
+            gifImage.attr("src", results[i].images.fixed_height.url);
+
+            // Appending the paragraph and image tag to the animalDiv
+            gifDiv.append(p);
+            gifDiv.append(gifImage);
+
+            // Prependng the animalDiv to the HTML page in the "#gifs-appear-here" div
+            gifContainer.prepend(gifDiv);
+        }
+    });
 });
 
 

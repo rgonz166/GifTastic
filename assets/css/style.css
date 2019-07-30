@@ -1,0 +1,16 @@
+.container{
+    margin-top: 20px;
+}
+.gif-container{
+    width: 75%;
+}
+.single-gif{
+    float: left;
+    margin: 0px 10px 0px 10px;
+}
+.rating{
+    font-weight: 800;
+}
+.gif{
+    margin: 3px 3px;
+}
