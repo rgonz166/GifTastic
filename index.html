@@ -18,8 +18,14 @@
                 <label for="gif-input">Search for Gif</label>
                 <input type="text" id="gif-input"><br>
                 <!-- adds a button to gif buttons  -->
-                <input id="add-gif" type="submit" value="Add Gif Button">
+                <button id="add-gif" class="btn btn-success" type="submit">Add Gif Button</button>
+                <!-- <button id='favorites' class="btn btn-info">Favorites</button> -->
             </form>
+            <!-- Default switch -->
+            <div class="custom-control custom-switch">
+                <input type="checkbox" class="custom-control-input" id="customSwitches" onclick=toggleFavoriteButton()>
+                <label class="custom-control-label" for="customSwitches">Add to Favorites?</label>
+            </div>
         </div>
         <div class="row">
             <!-- Gif Buttons will go here -->

@@ -14,16 +14,22 @@ add a event.preventDefault() because using submit button
 //Initialize variables
 var gifs = ['dog'];
 var buttonColors = ['primary','secondary','success','danger','warning','info','dark'];
-var favoriteGifs = [];
-
+// Use this string to store id of gif
+var favoriteGifs = ["21GCae4djDWtP5soiY","bbshzgyFQDqPHXBo4c"];
 // Get DOM elements
 var gifButtons = $('.gif-buttons');
 var gifContainer = $('.gif-container');
 var gifInput = $('#gif-input');
+var toggled = false;
+
 
 $(window).on('load',function(){
     if(favoriteGifs.length > 0){
-        loadFav();
+        var favButton = $('<button>');
+        favButton.attr('id','favorites');
+        favButton.attr('class', 'btn btn-info');
+        favButton.text('Favorites');
+        $('#gif-form').append(favButton);
     }
     loadButtons();
 });
@@ -36,6 +42,13 @@ $('#add-gif').on('click',function(e){
     loadButtons();
 });
 
+$(document).on('click','#favorites',function(e){
+    e.preventDefault();
+    var favoriteIDs = favoriteGifs.join(',');
+    var favoriteQ = 'http://api.giphy.com/v1/gifs?api_key=dc6zaTOxFJmzC&ids='+favoriteIDs;
+    displayGifs(favoriteQ);
+});
+
 function loadButtons(){
     // remove existing buttons first
     gifButtons.empty();
@@ -45,7 +58,7 @@ function loadButtons(){
         var button = $('<button>');
         button.attr('type','button');
         // adds class called gif
-        button.addClass('gif-button').addClass('btn').addClass('btn-'+buttonColors[i%buttonColors.length]);
+        button.addClass('gif-button').addClass('btn').addClass('btn-outline-'+buttonColors[i%buttonColors.length]);
         // adds attribute of data-name with the name at that index
         button.attr('data-name', gifs[i]);
         // adds the name as the text of the button
@@ -56,11 +69,15 @@ function loadButtons(){
 }
 
 $(document).on('click','.gif-button',function(){
-    var gifQ = $(this).attr('data-name');
+    var gifQ = 'q="'+($(this).attr('data-name'))+'"';
     var key = 'iflq4o1A7c7VD2FODJs0Hw2Q3dzfBKwy';
-    var queryURL = 'https://api.giphy.com/v1/gifs/search?q="' + gifQ + '"&api_key='+key+'&limit=10'
+    var queryURL = 'https://api.giphy.com/v1/gifs/search?' + gifQ + '&api_key='+key+'&limit=10';
+    displayGifs(queryURL);
+});
+
+function displayGifs(query){
     $.ajax({
-        url:queryURL,
+        url:query,
         method: "GET"
     }).then(function(res){
         console.log(res);
@@ -81,6 +98,7 @@ $(document).on('click','.gif-button',function(){
             gifImage.addClass('gif');
             // Setting the src attribute of the image to a property pulled off the result item
             gifImage.attr("src", results[i].images.fixed_height_still.url);
+            gifImage.attr('data-id', results[i].id);
             gifImage.attr('data-still',results[i].images.fixed_height_still.url);
             gifImage.attr('data-animate',results[i].images.fixed_height.url)
             gifImage.attr('data-state',"still");
@@ -93,21 +111,41 @@ $(document).on('click','.gif-button',function(){
             gifContainer.prepend(gifDiv);
         }
     });
-});
+}
+
+function toggleFavoriteButton(){
+    if(toggled){
+        toggled = false;
+        console.log('false');
+        
+    }else{
+        toggled = true;
+        console.log('true');
+    }
+}
 
 $(document).on('click','.gif',function(){
-    var state = $(this).attr("data-state");
-    // If the clicked image's state is still, update its src attribute to what its data-animate value is.
-    // Then, set the image's data-state to animate
-    // Else set src to the data-still value
-    if (state === "still") {
-        $(this).attr("src", $(this).attr("data-animate"));
-        $(this).attr("data-state", "animate");
-    } else {
-        $(this).attr("src", $(this).attr("data-still"));
-        $(this).attr("data-state", "still");
+    console.log('clicked');
+    var favoriteToggle = $('.fav-toggle');
+    if(toggled){
+        favoriteGifs.push($(this).attr('id'));
+        alert('Added');
+    }else{
+        console.log('animated');
+        console.log(this);
+        var state = $(this).attr("data-state");
+        // If the clicked image's state is still, update its src attribute to what its data-animate value is.
+        // Then, set the image's data-state to animate
+        // Else set src to the data-still value
+        if (state === "still") {
+            $(this).attr("src", $(this).attr("data-animate"));
+            $(this).attr("data-state", "animate");
+        } else {
+            $(this).attr("src", $(this).attr("data-still"));
+            $(this).attr("data-state", "still");
+        }
     }
-})
+});
 
 
 // Function to reset page of buttons and gifs
