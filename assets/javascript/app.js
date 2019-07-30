@@ -12,7 +12,7 @@ add a event.preventDefault() because using submit button
 
 */
 //Initialize variables
-var gifs = [];
+var gifs = ['dog'];
 var buttonColors = ['primary','secondary','success','danger','warning','info','dark'];
 var favoriteGifs = [];
 
@@ -45,7 +45,7 @@ function loadButtons(){
         var button = $('<button>');
         button.attr('type','button');
         // adds class called gif
-        button.addClass('gif').addClass('btn').addClass('btn-'+buttonColors[i%buttonColors.length]);
+        button.addClass('gif-button').addClass('btn').addClass('btn-'+buttonColors[i%buttonColors.length]);
         // adds attribute of data-name with the name at that index
         button.attr('data-name', gifs[i]);
         // adds the name as the text of the button
@@ -55,7 +55,7 @@ function loadButtons(){
     }
 }
 
-$(document).on('click','.gif',function(){
+$(document).on('click','.gif-button',function(){
     var gifQ = $(this).attr('data-name');
     var key = 'iflq4o1A7c7VD2FODJs0Hw2Q3dzfBKwy';
     var queryURL = 'https://api.giphy.com/v1/gifs/search?q="' + gifQ + '"&api_key='+key+'&limit=10'
@@ -70,7 +70,7 @@ $(document).on('click','.gif',function(){
 
             // Creating and storing a div tag
             var gifDiv = $("<div>");
-            gifDiv.addClass('single-gif');
+            gifDiv.addClass('gif-div');
 
             // Creating a paragraph tag with the result item's rating
             var p = $("<p>").text("Rating: [" + results[i].rating +"]");
@@ -78,8 +78,12 @@ $(document).on('click','.gif',function(){
 
             // Creating and storing an image tag
             var gifImage = $("<img>");
+            gifImage.addClass('gif');
             // Setting the src attribute of the image to a property pulled off the result item
-            gifImage.attr("src", results[i].images.fixed_height.url);
+            gifImage.attr("src", results[i].images.fixed_height_still.url);
+            gifImage.attr('data-still',results[i].images.fixed_height_still.url);
+            gifImage.attr('data-animate',results[i].images.fixed_height.url)
+            gifImage.attr('data-state',"still");
 
             // Appending the paragraph and image tag to the animalDiv
             gifDiv.append(p);
@@ -91,7 +95,19 @@ $(document).on('click','.gif',function(){
     });
 });
 
-
+$(document).on('click','.gif',function(){
+    var state = $(this).attr("data-state");
+    // If the clicked image's state is still, update its src attribute to what its data-animate value is.
+    // Then, set the image's data-state to animate
+    // Else set src to the data-still value
+    if (state === "still") {
+        $(this).attr("src", $(this).attr("data-animate"));
+        $(this).attr("data-state", "animate");
+    } else {
+        $(this).attr("src", $(this).attr("data-still"));
+        $(this).attr("data-state", "still");
+    }
+})
 
 
 // Function to reset page of buttons and gifs

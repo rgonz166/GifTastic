@@ -4,13 +4,13 @@
 .gif-container{
     width: 75%;
 }
-.single-gif{
+.gif-div{
     float: left;
-    margin: 0px 10px 0px 10px;
+    margin: 0px 20px;
 }
 .rating{
     font-weight: 800;
 }
-.gif{
+.gif-button{
     margin: 3px 3px;
 }
