@@ -49,11 +49,25 @@ function loadButtons(){
     }
 }
 
+$(document).on('click','.gif',function(){
+    var gifQ = $(this).attr('data-name');
+    var key = 'iflq4o1A7c7VD2FODJs0Hw2Q3dzfBKwy';
+    var queryURL = 'https://api.giphy.com/v1/gifs/search?q="' + gifQ + '"&api_key='+key+'&limit=10'
+    $.ajax({
+        url:queryURL,
+        method: "GET"
+    }).then(function(res){
+        console.log(res);
+    })
+});
+
+
 
 
 // Function to reset page of buttons and gifs
 function resetPage(){
     gifButtons.empty();
     gifContainer.empty();
+    // sets array to empty
     gifs = [];
 }
