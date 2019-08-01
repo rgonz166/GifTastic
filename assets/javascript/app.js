@@ -187,7 +187,7 @@ $(document).on('click','#favorites',function(e){
     // var favoriteIDs = favoriteGifs.join(',');
     console.log('fav id string', favoriteGifs);
     
-    var favoriteQ = 'http://api.giphy.com/v1/gifs?api_key=dc6zaTOxFJmzC&ids='+favoriteGifs+'';
+    var favoriteQ = 'https://api.giphy.com/v1/gifs?api_key=dc6zaTOxFJmzC&ids='+favoriteGifs+'';
     displayGifs(favoriteQ);
 });
 
