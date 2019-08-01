@@ -101,6 +101,7 @@ function displayGifs(query){
             gifImage.attr('data-still',results[i].images.fixed_height_still.url);
             gifImage.attr('data-animate',results[i].images.fixed_height.url)
             gifImage.attr('data-state',"still");
+            gifImage.attr('data-content', 'Added to Favorites');
 
             // Appending the paragraph and image tag to the animalDiv
             gifDiv.append(p);
@@ -127,6 +128,7 @@ function toggleFavoriteButton(){
 $(document).on('click','.gif',function(){
     // store true or false of toggle
     var favoriteToggle = $('.fav-toggle');
+    var specificGif = $(this);
     // if toggle is true, then run this
     if(toggled){
         // if toggled then do not animate
@@ -140,6 +142,9 @@ $(document).on('click','.gif',function(){
         favoriteGifs.push($(this).attr('data-id'));
         // then store favorite gifs array into localStorage to save even after reloading
         localStorage.setItem("favId",JSON.stringify(favoriteGifs));
+        specificGif.popover('show');
+        setTimeout(function(){
+            specificGif.popover('hide')}, 3000);
     // If not toggled run this
     }else{
         var state = $(this).attr("data-state");
@@ -198,7 +203,8 @@ $(document).on('click','#clearAllFav',function(e){
     }
 })
 
-function clearGifs(){
+function clearGifs(e){
+    e.preventDefault();
     gifContainer.empty();
 }
 
