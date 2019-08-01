@@ -134,8 +134,6 @@ $(document).on('click','.gif',function(){
         // if toggled then do not animate
         // show favorite button and delete all favorite button on page
         if(favoriteGifs.length == 0){
-            // addFavButton();
-            // addClearAllFavButton();
             favoriteFunctions('add');
         }
         // push the gif id to local favorite gifs array
@@ -203,10 +201,10 @@ $(document).on('click','#clearAllFav',function(e){
     }
 })
 
-function clearGifs(e){
+$(document).on('click','#clear-gifs',function(e){
     e.preventDefault();
     gifContainer.empty();
-}
+})
 
 // Function to reset page of buttons and gifs
 function resetPage(){
