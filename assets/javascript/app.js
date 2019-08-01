@@ -1,7 +1,6 @@
 /* TODO
 add a remove from favorites
     - populate checkbox only after a favorites has appeared
-add an empty all favorites with warning button, maybe an alert saying all favorites will be deleted
 
 */
 
