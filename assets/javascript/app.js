@@ -12,10 +12,10 @@ add a event.preventDefault() because using submit button
 
 */
 //Initialize variables
-var gifs = ['dog'];
+var gifs = ['dog','cat'];
 var buttonColors = ['primary','secondary','success','danger','warning','info','dark'];
 // Use this string to store id of gif
-var favoriteGifs = ["21GCae4djDWtP5soiY","bbshzgyFQDqPHXBo4c"];
+var favoriteGifs = [];
 // Get DOM elements
 var gifButtons = $('.gif-buttons');
 var gifContainer = $('.gif-container');
@@ -24,12 +24,15 @@ var toggled = false;
 
 
 $(window).on('load',function(){
+    // if localstorage is empty then run this
+    if(!(localStorage.getItem('favId') === null)){
+        favoriteGifs = JSON.parse(localStorage.getItem('favId'));
+        console.log('parsed',favoriteGifs);
+    }
+    
+    // Show favorite button if favorite array contains anything
     if(favoriteGifs.length > 0){
-        var favButton = $('<button>');
-        favButton.attr('id','favorites');
-        favButton.attr('class', 'btn btn-info');
-        favButton.text('Favorites');
-        $('#gif-form').append(favButton);
+        addFavButton();
     }
     loadButtons();
 });
@@ -38,15 +41,30 @@ $(window).on('load',function(){
 $('#add-gif').on('click',function(e){
     // prevent button from refreshing page
     e.preventDefault();
-    gifs.push(gifInput.val().trim());
+    
+    if(gifInput.val().trim() === ''){
+        return;
+    }
+    else{gifs.push(gifInput.val().trim());}
+    gifInput.val('');
     loadButtons();
 });
 
 $(document).on('click','#favorites',function(e){
     e.preventDefault();
-    var favoriteIDs = favoriteGifs.join(',');
-    var favoriteQ = 'http://api.giphy.com/v1/gifs?api_key=dc6zaTOxFJmzC&ids='+favoriteIDs;
+    favoriteGifs = JSON.parse(localStorage.getItem('favId'));
+    // var favoriteIDs = favoriteGifs.join(',');
+    console.log('fav id string', favoriteGifs);
+    
+    var favoriteQ = 'http://api.giphy.com/v1/gifs?api_key=dc6zaTOxFJmzC&ids='+favoriteGifs+'';
     displayGifs(favoriteQ);
+});
+
+$(document).on('click','.gif-button',function(){
+    var gifQ = 'q="'+($(this).attr('data-name'))+'"';
+    var key = 'iflq4o1A7c7VD2FODJs0Hw2Q3dzfBKwy';
+    var queryURL = 'https://api.giphy.com/v1/gifs/search?' + gifQ + '&api_key='+key+'&limit=10';
+    displayGifs(queryURL);
 });
 
 function loadButtons(){
@@ -67,13 +85,6 @@ function loadButtons(){
         gifButtons.append(button);
     }
 }
-
-$(document).on('click','.gif-button',function(){
-    var gifQ = 'q="'+($(this).attr('data-name'))+'"';
-    var key = 'iflq4o1A7c7VD2FODJs0Hw2Q3dzfBKwy';
-    var queryURL = 'https://api.giphy.com/v1/gifs/search?' + gifQ + '&api_key='+key+'&limit=10';
-    displayGifs(queryURL);
-});
 
 function displayGifs(query){
     $.ajax({
@@ -116,23 +127,31 @@ function displayGifs(query){
 function toggleFavoriteButton(){
     if(toggled){
         toggled = false;
-        console.log('false');
-        
     }else{
         toggled = true;
-        console.log('true');
     }
 }
 
+function addFavButton(){
+    console.log('fav array len',favoriteGifs.length);
+    
+        var favButton = $('<button>');
+        favButton.attr('id','favorites');
+        favButton.attr('class', 'btn btn-info');
+        favButton.text('Favorites');
+        $('#gif-form').append(favButton);
+    
+}
+
 $(document).on('click','.gif',function(){
-    console.log('clicked');
     var favoriteToggle = $('.fav-toggle');
     if(toggled){
-        favoriteGifs.push($(this).attr('id'));
-        alert('Added');
+        if(favoriteGifs.length == 0){
+            addFavButton();
+        }
+        favoriteGifs.push($(this).attr('data-id'));
+        localStorage.setItem("favId",JSON.stringify(favoriteGifs));
     }else{
-        console.log('animated');
-        console.log(this);
         var state = $(this).attr("data-state");
         // If the clicked image's state is still, update its src attribute to what its data-animate value is.
         // Then, set the image's data-state to animate
