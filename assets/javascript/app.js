@@ -1,8 +1,6 @@
 /* TODO
 add a remove from favorites
     - populate checkbox only after a favorites has appeared
-add an empty all favorites with warning button, maybe an alert saying all favorites will be deleted
-
 */
 
 //Initialize variables
@@ -25,9 +23,9 @@ $(window).on('load',function(){
     }
     // Show favorite button if favorite array contains anything
     if(favoriteGifs.length > 0){
-        addFavButton();
-        addClearAllFavButton();
+        favoriteFunctions('add');
     }
+    // Adds buttons to page from gifs array
     loadButtons();
 });
 
@@ -35,14 +33,16 @@ $(window).on('load',function(){
 $('#add-gif').on('click',function(e){
     // prevent button from refreshing page
     e.preventDefault();
-    
+    // if the input is empty, return nothing to avoid blank buttons
     if(gifInput.val().trim() === ''){
         return;
     }
     else{
+        // else push the value into gifs array then run function to load buttons on page
         gifs.push(gifInput.val().trim());
     }
     gifInput.val('');
+    // adds buttons according to what is stored in gifs array
     loadButtons();
 });
 
@@ -132,8 +132,9 @@ $(document).on('click','.gif',function(){
         // if toggled then do not animate
         // show favorite button and delete all favorite button on page
         if(favoriteGifs.length == 0){
-            addFavButton();
-            addClearAllFavButton();
+            // addFavButton();
+            // addClearAllFavButton();
+            favoriteFunctions('add');
         }
         // push the gif id to local favorite gifs array
         favoriteGifs.push($(this).attr('data-id'));
@@ -155,14 +156,30 @@ $(document).on('click','.gif',function(){
     }
 });
 
-// adds Favorite button to page
-function addFavButton(){
-    var favButton = $('<button>');
-    favButton.attr('id','favorites');
-    favButton.attr('class', 'btn btn-info');
-    favButton.text('Favorites');
-    $('#gif-form').append(favButton);
+// function that contains everything with favorites
+var favoriteFunctions = function(option){
+    if(option === 'add'){
+        addToPage('#gif-form','<button>','favorites','btn btn-info','Favorites');
+        addToPage('#gif-form','<button>','clearAllFav','btn btn-danger','Clear Favorites');
+    }
+    else if(option === 'delete'){
+        localStorage.clear();
+        favoriteGifs = [];
+        $('#favorites').remove();
+        $('#clearAllFav').remove();
+    }
 }
+
+// function to add buttons to page
+
+    function addToPage(whichElement, addElement, addid, addclass, addtext){
+        var elem = $(addElement);
+        elem.attr('id', addid);
+        elem.attr('class', addclass);
+        elem.text(addtext);
+        $(whichElement).append(elem);
+    }
+
 
 $(document).on('click','#favorites',function(e){
     e.preventDefault();
@@ -174,22 +191,10 @@ $(document).on('click','#favorites',function(e){
     displayGifs(favoriteQ);
 });
 
-// add clears all favorites from local Storage
-function addClearAllFavButton(){
-var clearAllFavButton = $('<button>');
-clearAllFavButton.attr('id','clearAllFav');
-clearAllFavButton.attr('class', 'btn btn-danger');
-clearAllFavButton.text('Clear All Favorites');
-$('#gif-form').append(clearAllFavButton);
-}
-
 $(document).on('click','#clearAllFav',function(e){
     e.preventDefault();
     if(confirm('Are you sure you want to clear all your favorites?')){
-        localStorage.clear();
-        favoriteGifs = [];
-        $('#favorites').remove();
-        $('#clearAllFav').remove();
+        favoriteFunctions('delete');
     }
 })
 
