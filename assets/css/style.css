@@ -1,3 +1,18 @@
+html{
+    -webkit-box-sizing: border-box; /* Safari/Chrome, other WebKit */
+    -moz-box-sizing: border-box;    /* Firefox, other Gecko */
+    box-sizing: border-box;   
+}
+body{
+    background-color: rgb(29, 28, 28);
+    color: white;
+}
+h1{
+    border:2px solid white;
+    border-radius: 5px;
+    font-size: xx-large;
+    padding: 10px;
+}
 .container{
     margin-top: 20px;
 }

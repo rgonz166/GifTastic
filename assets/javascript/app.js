@@ -5,7 +5,7 @@ add a remove from favorites
 
 //Initialize variables
 var gifs = ['dog','cat'];
-var buttonColors = ['primary','secondary','success','danger','warning','info','dark'];
+var buttonColors = ['primary','secondary','success','danger','warning','info','light'];
 // Use this string to store id of gif
 var favoriteGifs = [];
 // Get DOM elements
@@ -198,6 +198,9 @@ $(document).on('click','#clearAllFav',function(e){
     }
 })
 
+function clearGifs(){
+    gifContainer.empty();
+}
 
 // Function to reset page of buttons and gifs
 function resetPage(){
