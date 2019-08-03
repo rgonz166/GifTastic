@@ -19,7 +19,6 @@ $(window).on('load',function(){
     // if localstorage is not empty then run this
     if(!(localStorage.getItem('favId') === null)){
         favoriteGifs = JSON.parse(localStorage.getItem('favId'));
-        console.log('parsed',favoriteGifs);
     }
     // Show favorite button if favorite array contains anything
     if(favoriteGifs.length > 0){
@@ -36,8 +35,7 @@ $('#add-gif').on('click',function(e){
     // if the input is empty, return nothing to avoid blank buttons
     if(gifInput.val().trim() === ''){
         return;
-    }
-    else{
+    }else{
         // else push the value into gifs array then run function to load buttons on page
         gifs.push(gifInput.val().trim());
     }
@@ -88,9 +86,15 @@ function displayGifs(query){
             var gifDiv = $("<div>");
             gifDiv.addClass('gif-div');
 
+            // Create a paragraph tag with Title of gif
+            var titleString = results[i].title;
+            titleString = titleString.replace(' GIF','');
+            var pTitle = $('<p>').text(titleString);
+            pTitle.addClass('gif-title');
+
             // Creating a paragraph tag with the result item's rating
-            var p = $("<p>").text("Rating: [" + results[i].rating +"]");
-            p.addClass('rating');
+            var pRating = $("<p>").text("Rating: [" + results[i].rating +"]");
+            pRating.addClass('gif-rating');
 
             // Creating and storing an image tag
             var gifImage = $("<img>");
@@ -104,7 +108,8 @@ function displayGifs(query){
             gifImage.attr('data-content', 'Added to Favorites');
 
             // Appending the paragraph and image tag to the animalDiv
-            gifDiv.append(p);
+            gifDiv.append(pTitle);
+            gifDiv.append(pRating);
             gifDiv.append(gifImage);
 
             // Prependng the animalDiv to the HTML page in the "#gifs-appear-here" div
@@ -141,17 +146,21 @@ $(document).on('click','.gif',function(){
         // then store favorite gifs array into localStorage to save even after reloading
         localStorage.setItem("favId",JSON.stringify(favoriteGifs));
         specificGif.popover('show');
+        console.log('hide in 3 secs');
+        
         setTimeout(function(){
-            specificGif.popover('hide')}, 3000);
+            specificGif.popover('hide');
+        }, 1500);
+        
     // If not toggled run this
     }else{
         var state = $(this).attr("data-state");
         // If the clicked image's state is still, update its src attribute to what its data-animate value is.
         // Then, set the image's data-state to animate
-        // Else set src to the data-still value
         if (state === "still") {
             $(this).attr("src", $(this).attr("data-animate"));
             $(this).attr("data-state", "animate");
+        // Else set src to the data-still value
         } else {
             $(this).attr("src", $(this).attr("data-still"));
             $(this).attr("data-state", "still");
@@ -162,8 +171,8 @@ $(document).on('click','.gif',function(){
 // function that contains everything with favorites
 var favoriteFunctions = function(option){
     if(option === 'add'){
-        addToPage('#gif-form','<button>','favorites','btn btn-info','Favorites');
-        addToPage('#gif-form','<button>','clearAllFav','btn btn-danger','Clear Favorites');
+        addToPage('#main-buttons','<button>','favorites','btn btn-info','Favorites');
+        addToPage('#main-buttons','<button>','clearAllFav','btn btn-danger','Clear Favorites');
     }
     else if(option === 'delete'){
         localStorage.clear();
@@ -187,8 +196,6 @@ var favoriteFunctions = function(option){
 $(document).on('click','#favorites',function(e){
     e.preventDefault();
     favoriteGifs = JSON.parse(localStorage.getItem('favId'));
-    // var favoriteIDs = favoriteGifs.join(',');
-    console.log('fav id string', favoriteGifs);
     
     var favoriteQ = 'https://api.giphy.com/v1/gifs?api_key=dc6zaTOxFJmzC&ids='+favoriteGifs+'';
     displayGifs(favoriteQ);

@@ -15,17 +15,20 @@
         </div>
         <div class="row">
             <form id="gif-form">
-                <label for="gif-input">Search for Gif</label>
-                <input type="text" id="gif-input"><br>
-                <!-- adds a button to gif buttons  -->
-                <button id="add-gif" class="btn btn-success" type="submit">Add Gif Button</button>
-                <button id='clear-gifs' class="btn btn-warning" onclick="clearGifs()">Clear Gifs</button>
+                <div class="row">
+                    <label for="gif-input">Search for Gif</label>
+                    <input type="text" id="gif-input"><br>
+                    <div class="custom-control custom-switch">
+                        <input type="checkbox" class="custom-control-input" id="customSwitches" onclick=toggleFavoriteButton()>
+                        <label class="custom-control-label" for="customSwitches">Add to Favorites</label>
+                    </div>
+                </div>
+                <div class="row" id="main-buttons">
+                    <!-- adds a button to gif buttons  -->
+                    <button id="add-gif" class="btn btn-success" type="submit">Add Gif Button</button>
+                    <button id='clear-gifs' class="btn btn-warning" >Clear Gifs</button>
+                </div>
             </form>
-            <!-- Default switch -->
-            <div class="custom-control custom-switch">
-                <input type="checkbox" class="custom-control-input" id="customSwitches" onclick=toggleFavoriteButton()>
-                <label class="custom-control-label" for="customSwitches">Add to Favorites</label>
-            </div>
         </div>
         <div class="row">
             <!-- Gif Buttons will go here -->

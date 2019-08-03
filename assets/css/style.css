@@ -21,7 +21,7 @@ h1{
     margin-top: 20px;
 }
 .gif-container{
-    width: 75%;
+    width: 100%;
 }
 .gif-div{
     float: left;
@@ -35,4 +35,10 @@ button{
 }
 .custom-control{
     margin-left: 40px;
+}
+p{
+    margin:0px;
+}
+label{
+    margin-right: 5px;
 }
